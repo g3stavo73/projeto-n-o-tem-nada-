@@ -2,14 +2,9 @@
 import { useState, useCallback } from 'react';
 import '../styles/config.scss';
 
-// ── Raw file imports via Vite ─────────────────────────────────────────────────
-// Each ?raw import returns the file's full content as a string at build time.
-
-// 🦀 Rust
 import rawCargoToml  from '../../particles-wasm/Cargo.toml?raw';
 import rawLibRs      from '../../particles-wasm/src/lib.rs?raw';
 
-// ⚛️ TypeScript / React
 import rawParticles  from '../particles.ts?raw';
 import rawApp        from '../App.tsx?raw';
 import rawMain       from '../main.tsx?raw';
@@ -20,7 +15,6 @@ import rawFinalScreen  from '../components/FinalScreen.tsx?raw';
 import rawCodeShowcase from './CodeShowcase.tsx?raw';
 import rawConfigPage   from './ConfigPage.tsx?raw';
 
-// 🎨 SCSS / CSS
 import rawIndexCss    from '../index.css?raw';
 import rawVariables   from '../styles/_variables.scss?raw';
 import rawAppScss     from '../styles/app.scss?raw';
@@ -31,12 +25,9 @@ import rawFinalScss    from '../styles/final.scss?raw';
 import rawCodeScss     from '../styles/code.scss?raw';
 import rawConfigScss   from '../styles/config.scss?raw';
 
-// ⚙️ Config
 import rawPackageJson  from '../../package.json?raw';
 import rawViteConfig   from '../../vite.config.ts?raw';
 import rawTsConfig     from '../../tsconfig.json?raw';
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 type Lang = 'rust' | 'typescript' | 'scss' | 'css' | 'json' | 'toml';
 
@@ -54,8 +45,6 @@ interface Category {
   cls: string;
   files: FileEntry[];
 }
-
-// ── Data ──────────────────────────────────────────────────────────────────────
 
 const CATEGORIES: Category[] = [
   {
@@ -103,11 +92,9 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-// ── Syntax highlighter ────────────────────────────────────────────────────────
+const TS_KEYWORDS = /\b(const|let|var|function|return|export|default|import|from|as|interface|type|class|new|if|else|for|while|do|switch|case|break|continue|async|await|extends|implements|readonly|private|public|protected|static|enum|namespace|module|declare|abstract|implements|keyof|typeof|instanceof|in|of|get|set|as|satisfies)\b/g;
 
-const TS_KEYWORDS = /\b(const|let|var|function|return|export|default|import|from|as|interface|type|class|new|if|else|for|while|do|switch|case|break|continue|async|await|extends|implements|readonly|public|private|protected|static|abstract|void|boolean|string|number|null|undefined|true|false|this|super|typeof|instanceof|in|of|throw|try|catch|finally)\b/g;
-
-const RUST_KEYWORDS = /\b(pub|fn|impl|struct|use|mut|self|let|const|return|match|if|else|for|while|loop|type|enum|trait|where|as|mod|crate|super|false|true|move|ref|dyn|unsafe|extern|async|await|Box|Vec|Option|Result|Some|None|Ok|Err|String|str|usize|u8|u16|u32|u64|i8|i16|i32|i64|f32|f64|bool)\b/g;
+const RUST_KEYWORDS = /\b(pub|fn|impl|struct|use|mut|self|let|const|return|match|if|else|for|while|loop|type|enum|trait|where|as|mod|crate|super|false|true|move|ref|dyn|unsafe|extern|async|await|try|catch|throw|yield|finally|static|unsafe|abstract|override|final|package|import|class|interface|null|undefined)\b/g;
 
 const TOML_KEYWORDS = /^(\[.*\])/gm;
 
@@ -118,7 +105,6 @@ function escHtml(s: string): string {
 function highlight(code: string, lang: Lang): string {
   let s = escHtml(code);
 
-  // comments first (before keyword pass to avoid re-coloring inside comments)
   if (lang === 'rust') {
     s = s.replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>');
     s = s.replace(/(#\[[^\]]*\])/g, '<span class="at">$1</span>');
@@ -133,34 +119,26 @@ function highlight(code: string, lang: Lang): string {
     s = s.replace(TOML_KEYWORDS, '<span class="tp">$1</span>');
   }
 
-  // strings (avoid re-coloring already-spanned content)
   s = s.replace(/(?<!span[^>]*>)("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="str">$1</span>');
 
-  // keywords
   if (lang === 'rust') {
     s = s.replace(RUST_KEYWORDS, '<span class="kw">$1</span>');
   } else if (lang === 'typescript') {
     s = s.replace(TS_KEYWORDS, '<span class="kw">$1</span>');
   }
 
-  // numbers
   s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="nb">$1</span>');
 
   return s;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
-
 export function ConfigPage() {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-  // Which categories are open in the sidebar
   const [openCats, setOpenCats] = useState<Set<string>>(
     () => new Set(CATEGORIES.map(c => c.id))
   );
-  // Currently selected file
   const [selected, setSelected] = useState<FileEntry | null>(null);
-  // Copy state: filename → 'copied' | undefined
   const [copiedFile, setCopiedFile] = useState<string | null>(null);
 
   const toggleCat = useCallback((id: string) => {
@@ -188,7 +166,6 @@ export function ConfigPage() {
 
   return (
     <div className="cfg-page">
-      {/* ── Top bar ── */}
       <header className="cfg-topbar">
         <a href={`${base}/`} className="cfg-back" data-testid="link-config-back">
           ← voltar
@@ -202,7 +179,6 @@ export function ConfigPage() {
       </header>
 
       <div className="cfg-body">
-        {/* ── Sidebar ── */}
         <nav className="cfg-sidebar" aria-label="Arquivos">
           {CATEGORIES.map(cat => {
             const isOpen = openCats.has(cat.id);
@@ -249,7 +225,6 @@ export function ConfigPage() {
           })}
         </nav>
 
-        {/* ── Viewer ── */}
         <main className={`cfg-viewer ${catForSelected ? catForSelected.cls : ''}`}>
           {!selected ? (
             <div className="cfg-viewer-empty">
