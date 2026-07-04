@@ -1,0 +1,63 @@
+@use 'variables' as *;
+
+.buttons-container {
+  display: flex;
+  gap: 1.5rem;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-yes {
+  background: $color-rose;
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem 2.8rem;
+  font-family: $font-heading;
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  box-shadow: $glow-rose;
+  transition: all 0.3s ease;
+  animation: pulse-glow 2s infinite alternate;
+
+  &:hover {
+    box-shadow: 0 0 40px rgba(200, 60, 80, 0.4);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 15px rgba(200, 60, 80, 0.2); }
+  100% { box-shadow: 0 0 35px rgba(200, 60, 80, 0.4); }
+}
+
+.btn-no {
+  background: hsl(340, 35%, 12%);
+  border: 1px dashed rgba($color-rose, 0.4);
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-family: $font-heading;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: rgba(200, 100, 120, 0.8);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 9999;
+}
+
+.flee-tooltip {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 10, 15, 0.8);
+  backdrop-filter: blur(4px);
+  color: $color-cream;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  border: 1px solid rgba(200, 60, 80, 0.2);
+} 
