@@ -1,7 +1,4 @@
 {
-  "name": "projeto-n-o-tem-nada",
-  "version": "1.0.0",
-  "public": false,
   "buildCommand": "npm run build",
-  "outputDirectory": "config/dist/public"
+  "outputDirectory": "dist"
 }
