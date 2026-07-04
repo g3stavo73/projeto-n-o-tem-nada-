@@ -1,6 +1,5 @@
 use wasm_bindgen::prelude::*;
 
-// Simple Linear Congruential Generator for deterministic pseudo-random numbers
 struct Rng {
     state: u64,
 }
@@ -35,11 +34,11 @@ struct Particle {
     size: f32,
     rotation: f32,
     rot_speed: f32,
-    life: f32,    // 0..1, decrements each frame
-    decay: f32,   // how fast it dies
+    life: f32,
+    decay: f32,
     gravity: f32,
     drag: f32,
-    kind: u8,     // 0=circle, 1=heart, 2=star, 3=sparkle
+    kind: u8,
 }
 
 #[wasm_bindgen]
@@ -48,7 +47,6 @@ pub struct ParticleSystem {
     width: f32,
     height: f32,
     rng: Rng,
-    seed: u64,
 }
 
 #[wasm_bindgen]
@@ -60,7 +58,6 @@ impl ParticleSystem {
             width,
             height,
             rng: Rng::new(42),
-            seed: 42,
         }
     }
 
@@ -69,23 +66,20 @@ impl ParticleSystem {
         self.height = height;
     }
 
-    /// Spawn a burst of mixed particles at (x, y) — for the YES button click
     pub fn spawn_burst(&mut self, x: f32, y: f32, count: u32) {
         for i in 0..count {
-            // Vary seed with index so each call is different
             self.rng.state = self.rng.state.wrapping_add(i as u64 + 1);
 
             let angle = self.rng.range(0.0, std::f32::consts::TAU);
             let speed = self.rng.range(80.0, 600.0);
             let vx = angle.cos() * speed;
-            let vy = angle.sin() * speed - self.rng.range(0.0, 200.0); // bias upward
+            let vy = angle.sin() * speed - self.rng.range(0.0, 200.0);
 
-            // Color: warm hearts palette
             let (r, g, b) = self.heart_color();
             let kind_roll = self.rng.range(0.0, 1.0);
-            let kind = if kind_roll < 0.5 { 1u8 } // heart
-                       else if kind_roll < 0.75 { 2 } // star
-                       else { 3 }; // sparkle
+            let kind = if kind_roll < 0.5 { 1u8 }
+                       else if kind_roll < 0.75 { 2 }
+                       else { 3 };
 
             self.particles.push(Particle {
                 x,
@@ -106,7 +100,6 @@ impl ParticleSystem {
         }
     }
 
-    /// Spawn falling hearts from the top — ambient shower
     pub fn spawn_hearts(&mut self, count: u32) {
         for i in 0..count {
             self.rng.state = self.rng.state.wrapping_add(i as u64 + 7);
@@ -127,14 +120,13 @@ impl ParticleSystem {
                 rot_speed: self.rng.range(-1.5, 1.5),
                 life: 1.0,
                 decay: self.rng.range(0.08, 0.18),
-                gravity: 0.0, // they fall via vy
+                gravity: 0.0,
                 drag: 1.0,
-                kind: 1, // heart
+                kind: 1,
             });
         }
     }
 
-    /// Spawn a large celebration explosion across the whole screen
     pub fn spawn_celebration(&mut self, count: u32) {
         let cx = self.width * 0.5;
         let cy = self.height * 0.4;
@@ -169,27 +161,21 @@ impl ParticleSystem {
         }
     }
 
-    /// Update physics (dt in seconds)
     pub fn update(&mut self, dt: f32) {
         let dt = dt.max(0.0).min(0.05);
         for p in &mut self.particles {
             p.vx *= p.drag;
             p.vy = p.vy * p.drag + p.gravity * dt;
-            // Gentle horizontal drift
             p.x += p.vx * dt;
             p.y += p.vy * dt;
             p.rotation += p.rot_speed * dt;
             p.life -= p.decay * dt;
-            // Alpha follows life but with a curve
             p.alpha = (p.life * p.life).max(0.0);
             p.size = p.size * (0.95_f32).powf(dt * 30.0);
         }
-        // Remove dead particles
         self.particles.retain(|p| p.life > 0.0 && p.size > 1.0);
     }
 
-    /// Returns flat f32 buffer: [x, y, r, g, b, alpha, size, rotation, kind, ...]
-    /// Each particle = 9 floats
     pub fn get_data(&self) -> Vec<f32> {
         let mut buf = Vec::with_capacity(self.particles.len() * 9);
         for p in &self.particles {
@@ -214,19 +200,16 @@ impl ParticleSystem {
         self.particles.clear();
     }
 
-    // --- private helpers (not exported) ---
-
     fn heart_color(&mut self) -> (f32, f32, f32) {
-        // Reds, pinks, magentas, light purple
         let palettes: [(f32,f32,f32); 8] = [
-            (1.0, 0.18, 0.27), // crimson
-            (1.0, 0.34, 0.47), // rose
-            (1.0, 0.55, 0.68), // pink
-            (1.0, 0.75, 0.80), // blush
-            (0.95, 0.20, 0.60), // hot pink
-            (0.85, 0.10, 0.40), // deep rose
-            (1.0, 0.88, 0.20), // golden
-            (1.0, 0.95, 0.95), // near-white
+            (1.0, 0.18, 0.27),
+            (1.0, 0.34, 0.47),
+            (1.0, 0.55, 0.68),
+            (1.0, 0.75, 0.80),
+            (0.95, 0.20, 0.60),
+            (0.85, 0.10, 0.40),
+            (1.0, 0.88, 0.20),
+            (1.0, 0.95, 0.95),
         ];
         let i = (self.rng.range(0.0, palettes.len() as f32) as usize)
             .min(palettes.len() - 1);
@@ -234,7 +217,6 @@ impl ParticleSystem {
     }
 
     fn celebration_color(&mut self) -> (f32, f32, f32) {
-        // Full rainbow celebration
         let palettes: [(f32,f32,f32); 10] = [
             (1.0, 0.18, 0.27),
             (1.0, 0.55, 0.0),
