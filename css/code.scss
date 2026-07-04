@@ -1,0 +1,113 @@
+@use 'variables' as *;
+
+.code-page {
+  min-height: 100vh;
+  background: $color-dark-bg;
+  background-image: radial-gradient(ellipse 70% 40% at 50% 20%, hsl(340, 40%, 11%) 0%, $color-dark-bg 100%);
+  color: $color-cream;
+  font-family: $font-heading;
+  padding: 0 0 5rem;
+}
+
+.code-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: rgba(200, 100, 120, 0.6);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: color 0.3s;
+  &:hover { color: $color-rose; }
+}
+
+.code-header {
+  text-align: center;
+  padding: 2rem 2rem 3rem;
+  h1 {
+    font-family: $font-script;
+    font-size: 3rem;
+    color: $color-gold;
+    margin: 0 0 0.5rem;
+  }
+  p {
+    font-size: 1rem;
+    color: hsl(30, 10%, 65%);
+    font-style: italic;
+    margin: 0 0 2rem;
+  }
+}
+
+.stack-badges {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  span {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(200, 100, 120, 0.3);
+    border-radius: 4px;
+    color: rgba(200, 100, 120, 0.8);
+    letter-spacing: 0.05em;
+  }
+}
+
+.code-sections {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.code-section {
+  h2 {
+    font-family: $font-heading;
+    font-size: 1.3rem;
+    color: $color-gold-light;
+    margin: 0 0 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background: $color-rose;
+      border-radius: 2px;
+    }
+  }
+  p {
+    font-size: 0.9rem;
+    color: hsl(30, 10%, 60%);
+    margin: 0 0 0.9rem;
+    font-style: italic;
+    line-height: 1.6;
+  }
+}
+
+.code-block {
+  background: hsl(340, 28%, 7%);
+  border: 1px solid hsl(340, 30%, 15%);
+  border-radius: 8px;
+  padding: 1.4rem 1.6rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: hsl(30, 12%, 78%);
+  overflow-x: auto;
+  white-space: pre;
+
+  .kw  { color: hsl(330, 65%, 72%); }  /* keywords */
+  .fn  { color: hsl(200, 70%, 72%); }  /* function names */
+  .str { color: hsl(100, 45%, 65%); }  /* strings */
+  .cm  { color: hsl(210, 10%, 45%); font-style: italic; } /* comments */
+  .tp  { color: hsl(40, 75%, 72%); }   /* types */
+  .nb  { color: hsl(25, 80%, 65%); }   /* numbers */
+} 
