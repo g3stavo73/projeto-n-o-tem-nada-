@@ -1,0 +1,43 @@
+@use 'variables' as *;
+
+body {
+  margin: 0;
+  padding: 0;
+  background: $color-dark-bg;
+  background-image: radial-gradient(ellipse 80% 50% at 50% 30%, hsl(340, 45%, 12%) 0%, $color-dark-bg 100%);
+  color: $color-cream;
+  font-family: $font-body;
+  min-height: 100dvh;
+}
+
+.app-container {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.bottom-links {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  z-index: 100;
+}
+
+.code-link {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: rgba(200, 100, 120, 0.42);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.25s;
+  &:hover { color: rgba(200, 100, 120, 0.9); }
+}
+ 
