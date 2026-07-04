@@ -1,0 +1,92 @@
+@use 'variables' as *;
+
+.question-card {
+  background: $color-card-bg;
+  border: $border-card;
+  border-radius: 16px;
+  padding: 3rem 4rem;
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), $glow-rose;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+  max-width: 90vw;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(200, 60, 80, 0.12);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+.question-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.photo-frame {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid $color-rose;
+  box-shadow: 0 0 0 4px rgba(180, 50, 70, 0.15), $glow-rose;
+  overflow: hidden;
+  margin: 0 auto 1.2rem;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.heart-icon-container {
+  width: 48px;
+  height: 48px;
+  color: $color-rose;
+  margin-bottom: 1rem;
+}
+
+.pulse-heart svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 10px rgba(230, 41, 88, 0.5));
+}
+
+.sarah-name {
+  font-family: $font-script;
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: $color-gold;
+  text-shadow: 0 2px 12px rgba(200, 160, 60, 0.35);
+  line-height: 1.1;
+  margin: 0 0 0.3rem;
+
+  @media (max-width: 768px) {
+    font-size: 3.5rem;
+  }
+}
+
+.proposal-text {
+  font-family: $font-heading;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  margin: 1rem 0 0 0;
+  color: $color-cream;
+  letter-spacing: 0.05em;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+} 
